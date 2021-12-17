@@ -51,7 +51,12 @@ public class StudentDetailsFragment extends Fragment {
             id.setText("ID: " + s.getStudentID());
             phone.setText("Phone: " + s.getStudentPhone());
             address.setText("Address: " + s.getStudentAddress());
-            cb.setChecked(s.getStudentCB());
+            boolean flag = s.getStudentCB();
+            Log.d("TAG","cb val: " + flag);
+            cb.setChecked(flag);
+//            if (cb.isChecked() != flag){
+//                Log.d("TAG","value not match");
+//            }
         }
 
         Button editBt = view.findViewById(R.id.students_details_edit);
@@ -63,6 +68,7 @@ public class StudentDetailsFragment extends Fragment {
             }
         }
         );
+        Log.d("TAG", "test - cb: " +  cb.isChecked());
         return view;
     }
 }

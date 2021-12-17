@@ -48,6 +48,13 @@ public class StudentListFragment extends Fragment {
                 Navigation.findNavController(v).navigate(action);
             }
         });
+        adapter.setOnCbClickListener(new OnCbClickListener() {
+            @Override
+            public void OnCbClick(int position) {
+                Student student = data.get(position);
+                student.setStudentCB(!student.getStudentCB());
+            }
+        });
 
         setHasOptionsMenu(true);
         return v;
@@ -73,17 +80,18 @@ public class StudentListFragment extends Fragment {
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         private final OnItemClickListener listener;
-//        private final OnCbClickListener cbListener;
+        private final OnCbClickListener cbListener;
 
         TextView nameTv;
         TextView idTv;
         CheckBox cb;
-        public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
+        public MyViewHolder(@NonNull View itemView, OnItemClickListener listener, OnCbClickListener cbListener) {
             super(itemView);
             nameTv = itemView.findViewById(R.id.list_row_name);
             idTv = itemView.findViewById(R.id.list_row_id);
             cb = itemView.findViewById(R.id.list_row_cb);
             this.listener = listener;
+            this.cbListener = cbListener;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -96,7 +104,7 @@ public class StudentListFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
-//                    cbListener.OnCbClick(pos);
+                    cbListener.OnCbClick(pos);
                     Log.d("TAG","cb was clicked " + pos);
                 }
             });
@@ -117,16 +125,20 @@ public class StudentListFragment extends Fragment {
     }
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
         private OnItemClickListener listener;
+        private OnCbClickListener cbListener;
 
         public void setOnItemClickListener(OnItemClickListener listener){
             this.listener = listener;
+        }
+        void setOnCbClickListener(OnCbClickListener cbListener){
+            this.cbListener = cbListener;
         }
 
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View rowView = getLayoutInflater().inflate(R.layout.student_list_row,parent,false);
-            MyViewHolder viewHolder = new MyViewHolder(rowView, listener);
+            MyViewHolder viewHolder = new MyViewHolder(rowView, listener, cbListener);
             return viewHolder;
         }
 

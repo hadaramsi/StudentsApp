@@ -1,18 +1,23 @@
 package com.example.studentsapp.model;
 
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+
+@Entity
 
 public class Student {
+    @PrimaryKey
+    @NonNull
     String name;
     String id;
     String address;
     String phone;
     boolean cb;
 
-    Student(){
-        name= "";
-        id= "";
-        cb = false;
+    public Student(){
+//        name= "";
+//        id= "";
+//        cb = false;
     }
     public Student(String name, String id, String phone, String address, boolean cb){
         this.name= name;
