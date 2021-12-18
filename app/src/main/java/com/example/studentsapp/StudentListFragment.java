@@ -114,7 +114,7 @@ public class StudentListFragment extends Fragment {
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     cbListener.OnCbClick(pos);
-                    Log.d("TAG","cb was clicked " + pos);
+                    //Log.d("TAG","cb was clicked " + pos);
                 }
             });
         }

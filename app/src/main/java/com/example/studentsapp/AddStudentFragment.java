@@ -57,9 +57,15 @@ public class AddStudentFragment extends Fragment {
                 CheckBox cb = view.findViewById(R.id.new_students_cb);
                 Student s = new Student(name.getText().toString(), id.getText().toString(), phone.getText().toString(), address.getText().toString(), cb.isChecked());
                 ProgressBar pb = view.findViewById(R.id.add_student_progressBar);
-                pb.setVisibility(View.VISIBLE);
+                //pb.setVisibility(View.VISIBLE);
+                try{
+                    Thread.sleep(3000);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
                 cancelBt.setEnabled(false);
                 saveBt.setEnabled(false);
+                pb.setVisibility(View.GONE);
                 Model.getInstance().addNewStudent(s,()->{
                     Navigation.findNavController(v).navigateUp();
                 });

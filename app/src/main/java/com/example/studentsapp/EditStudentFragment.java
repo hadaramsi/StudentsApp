@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.studentsapp.R;
@@ -26,6 +27,13 @@ import java.util.List;
 public class EditStudentFragment extends Fragment {
 
     List<Student> SData= new LinkedList<Student>();
+    Student stu = null;
+    TextView name;
+    TextView id;
+    TextView phone;
+    TextView address;
+    CheckBox cb;
+    ProgressBar pb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,11 +41,13 @@ public class EditStudentFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_student, container, false);
 
-        TextView name = view.findViewById(R.id.edit_students_name);
-        TextView id = view.findViewById(R.id.edit_students_id);
-        TextView phone = view.findViewById(R.id.edit_students_phone);
-        TextView address = view.findViewById(R.id.edit_students_address);
-        CheckBox cb = view.findViewById(R.id.edit_students_cb);
+        name = view.findViewById(R.id.edit_students_name);
+        id = view.findViewById(R.id.edit_students_id);
+        phone = view.findViewById(R.id.edit_students_phone);
+        address = view.findViewById(R.id.edit_students_address);
+        cb = view.findViewById(R.id.edit_students_cb);
+        pb = view.findViewById(R.id.edit_student_progressBar);
+        pb.setVisibility(View.VISIBLE);
         Model.getInstance().getStudentList(new Model.GetAllStudentsListener() {
             @Override
             public void onComplete(List<Student> d) {
@@ -47,14 +57,12 @@ public class EditStudentFragment extends Fragment {
         });
 
         String studentID = EditStudentFragmentArgs.fromBundle(getArguments()).getStudentID();
-        Student s = Model.getInstance().getStudentByID(studentID);
+        Model.getInstance().getStudentByID(studentID, (s)->{
+            updateDisplay(s);
+        });
 
-        if(s !=null){
-            name.setText(s.getStudentName());
-            id.setText(s.getStudentID());
-            phone.setText(s.getStudentPhone());
-            address.setText(s.getStudentAddress());
-            cb.setChecked(s.getStudentCB());
+        if(stu !=null){
+            updateDisplay(stu);
         }
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -71,7 +79,7 @@ public class EditStudentFragment extends Fragment {
         deleteBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Model.getInstance().deleteStudent(s);
+                Model.getInstance().deleteStudent(stu);
                 Navigation.findNavController(view).navigate(R.id.studentListFragment);
             }
         }
@@ -81,16 +89,27 @@ public class EditStudentFragment extends Fragment {
         saveBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                s.setStudentName(name.getText().toString());
-                s.setStudentID(id.getText().toString());
-                s.setStudentPhone(phone.getText().toString());
-                s.setStudentAddress(address.getText().toString());
-                s.setStudentCB(cb.isChecked());
+                stu.setStudentName(name.getText().toString());
+                stu.setStudentID(id.getText().toString());
+                stu.setStudentPhone(phone.getText().toString());
+                stu.setStudentAddress(address.getText().toString());
+                stu.setStudentCB(cb.isChecked());
                 Navigation.findNavController(view).navigateUp();
             }
         }
         );
         return view;
+    }
+    private void updateDisplay(Student s) {
+        //Log.d("TAG", "S - " + stu.getStudentID());
+        if (stu != null ) {
+            name.setText(s.getStudentName());
+            id.setText(s.getStudentID());
+            phone.setText(s.getStudentPhone());
+            address.setText(s.getStudentAddress());
+            cb.setChecked(s.getStudentCB());
+        }
+        pb.setVisibility(View.GONE);
     }
 
 }
