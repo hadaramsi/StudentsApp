@@ -21,23 +21,32 @@ import android.widget.TextView;
 import com.example.studentsapp.model.Model;
 import com.example.studentsapp.model.Student;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class StudentListFragment extends Fragment {
-    List<Student> data;
+    List<Student> data = new LinkedList<Student>();
     View v;
+    MyAdapter adapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_student_list, container, false);
-        data = Model.getInstance().getStudentList();
+        Model.getInstance().getStudentList(new Model.GetAllStudentsListener() {
+            @Override
+            public void onComplete(List<Student> d) {
+                data = d;
+                adapter.notifyDataSetChanged();
+            }
+        });
         RecyclerView list = v.findViewById(R.id.student_list_rv);
         list.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         list.setLayoutManager(layoutManager);
-        MyAdapter adapter = new MyAdapter();
+        adapter = new MyAdapter();
         list.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new OnItemClickListener() {

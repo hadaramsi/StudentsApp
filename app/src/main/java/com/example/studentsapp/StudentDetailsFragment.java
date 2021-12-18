@@ -11,16 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.studentsapp.model.Model;
 import com.example.studentsapp.model.Student;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class StudentDetailsFragment extends Fragment {
 
-    List<Student> Sdata;
+    List<Student> Sdata = new LinkedList<Student>();
     TextView name;
     TextView id;
     TextView phone;
@@ -28,32 +30,46 @@ public class StudentDetailsFragment extends Fragment {
     CheckBox cb;
     Student s = null;
     View view;
+    ProgressBar pb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_student_details, container, false);
-        Sdata = Model.getInstance().getStudentList();
+        Model.getInstance().getStudentList(new Model.GetAllStudentsListener() {
+            @Override
+            public void onComplete(List<Student> d) {
+                Sdata = d;
+                //adapter.notifyDataSetChanged();
+            }
+        });
         name=view.findViewById(R.id.students_details_name);
         id=view.findViewById(R.id.students_details_id);
         phone=view.findViewById(R.id.students_details_phone);
         address=view.findViewById(R.id.students_details_address);
         cb=view.findViewById(R.id.students_details_cb);
+        pb = view.findViewById(R.id.student_details_progressBar);
+        pb.setVisibility(View.VISIBLE);
 
         String studentID = StudentDetailsFragmentArgs.fromBundle(getArguments()).getStudentID();
 
 
-        if(s== null)
-            s = Model.getInstance().getStudentByID(studentID);
+        if(s== null) {
+            Model.getInstance().getStudentByID(studentID,(student)->{
+                updateDisplay(s);
+            });
+        }
         if(s !=null) {
-            name.setText("Name: " + s.getStudentName());
-            id.setText("ID: " + s.getStudentID());
-            phone.setText("Phone: " + s.getStudentPhone());
-            address.setText("Address: " + s.getStudentAddress());
-            boolean flag = s.getStudentCB();
-            Log.d("TAG","cb val: " + flag);
-            cb.setChecked(flag);
+            updateDisplay(s);
+//            name.setText("Name: " + s.getStudentName());
+//            id.setText("ID: " + s.getStudentID());
+//            phone.setText("Phone: " + s.getStudentPhone());
+//            address.setText("Address: " + s.getStudentAddress());
+//            boolean flag = s.getStudentCB();
+//            pb.setVisibility(View.GONE);
+//            Log.d("TAG","cb val: " + flag);
+//            cb.setChecked(flag);
 //            if (cb.isChecked() != flag){
 //                Log.d("TAG","value not match");
 //            }
@@ -68,7 +84,16 @@ public class StudentDetailsFragment extends Fragment {
             }
         }
         );
-        Log.d("TAG", "test - cb: " +  cb.isChecked());
+//        Log.d("TAG", "test - cb: " +  cb.isChecked());
         return view;
+    }
+    private void updateDisplay(Student s){
+        this.s = s;
+        name.setText("Name: " + s.getStudentName());
+        id.setText("ID: " + s.getStudentID());
+        phone.setText("Phone: " + s.getStudentPhone());
+        address.setText("Address: " + s.getStudentAddress());
+        boolean flag = s.getStudentCB();
+        pb.setVisibility(View.GONE);
     }
 }

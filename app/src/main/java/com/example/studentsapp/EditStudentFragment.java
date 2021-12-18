@@ -19,12 +19,13 @@ import com.example.studentsapp.StudentDetailsFragmentArgs;
 import com.example.studentsapp.model.Model;
 import com.example.studentsapp.model.Student;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
 public class EditStudentFragment extends Fragment {
 
-    List<Student> SData;
+    List<Student> SData= new LinkedList<Student>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,7 +38,13 @@ public class EditStudentFragment extends Fragment {
         TextView phone = view.findViewById(R.id.edit_students_phone);
         TextView address = view.findViewById(R.id.edit_students_address);
         CheckBox cb = view.findViewById(R.id.edit_students_cb);
-        SData = Model.getInstance().getStudentList();
+        Model.getInstance().getStudentList(new Model.GetAllStudentsListener() {
+            @Override
+            public void onComplete(List<Student> d) {
+                SData = d;
+                //adapter.notifyDataSetChanged();
+            }
+        });
 
         String studentID = EditStudentFragmentArgs.fromBundle(getArguments()).getStudentID();
         Student s = Model.getInstance().getStudentByID(studentID);

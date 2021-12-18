@@ -20,4 +20,7 @@ public interface StudentDao {
     @Delete
     void delete(Student student);
 
+    @Query("SELECT * FROM Student WHERE id=:id")
+    Student getStudentByID(String id);
+
 }

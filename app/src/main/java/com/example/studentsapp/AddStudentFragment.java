@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -14,10 +15,11 @@ import androidx.navigation.Navigation;
 import com.example.studentsapp.model.Model;
 import com.example.studentsapp.model.Student;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class AddStudentFragment extends Fragment {
-    List<Student> SData;
+    List<Student> SData = new LinkedList<Student>();
 
     public AddStudentFragment() {
     }
@@ -28,7 +30,13 @@ public class AddStudentFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_student, container, false);
 
-        SData = Model.getInstance().getStudentList();
+        Model.getInstance().getStudentList(new Model.GetAllStudentsListener() {
+            @Override
+            public void onComplete(List<Student> d) {
+                SData = d;
+                //adapter.notifyDataSetChanged();
+            }
+        });
 
         Button cancelBt = view.findViewById(R.id.new_students_cancel);
         cancelBt.setOnClickListener(new View.OnClickListener() {
@@ -48,8 +56,13 @@ public class AddStudentFragment extends Fragment {
                 TextView address = view.findViewById(R.id.new_students_address);
                 CheckBox cb = view.findViewById(R.id.new_students_cb);
                 Student s = new Student(name.getText().toString(), id.getText().toString(), phone.getText().toString(), address.getText().toString(), cb.isChecked());
-                SData.add(s);
-                Navigation.findNavController(v).navigateUp();
+                ProgressBar pb = view.findViewById(R.id.add_student_progressBar);
+                pb.setVisibility(View.VISIBLE);
+                cancelBt.setEnabled(false);
+                saveBt.setEnabled(false);
+                Model.getInstance().addNewStudent(s,()->{
+                    Navigation.findNavController(v).navigateUp();
+                });
             }
         });
 
