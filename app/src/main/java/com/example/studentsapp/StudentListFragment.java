@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.studentsapp.model.Model;
@@ -28,6 +29,7 @@ public class StudentListFragment extends Fragment {
     List<Student> data = new LinkedList<Student>();
     View v;
     MyAdapter adapter;
+    ProgressBar pb;
 
 
     @Override
@@ -48,6 +50,13 @@ public class StudentListFragment extends Fragment {
         list.setLayoutManager(layoutManager);
         adapter = new MyAdapter();
         list.setAdapter(adapter);
+//        try{
+//            Thread.sleep(3000);
+//            pb.setVisibility(View.GONE);
+//        }catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
+        //pb.setVisibility(View.GONE);
 
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -94,6 +103,7 @@ public class StudentListFragment extends Fragment {
         TextView nameTv;
         TextView idTv;
         CheckBox cb;
+
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener, OnCbClickListener cbListener) {
             super(itemView);
             nameTv = itemView.findViewById(R.id.list_row_name);

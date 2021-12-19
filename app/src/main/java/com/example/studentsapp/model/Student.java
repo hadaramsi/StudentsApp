@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey;
 public class Student {
     @PrimaryKey
     @NonNull
-    String name;
     String id;
+    String name;
     String address;
     String phone;
     boolean cb;
@@ -46,11 +46,9 @@ public class Student {
     public void setStudentCB(boolean cb){
         this.cb=cb;
     }
+    public void setStudentID(String id){this.id=id;}
     public void setStudentName(String name){
         this.name=name;
-    }
-    public void setStudentID(String id){
-        this.id=id;
     }
     public void setStudentPhone(String phone){
         this.phone=phone;

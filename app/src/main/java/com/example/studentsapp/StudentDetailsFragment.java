@@ -44,6 +44,7 @@ public class StudentDetailsFragment extends Fragment {
                 //adapter.notifyDataSetChanged();
             }
         });
+
         name=view.findViewById(R.id.students_details_name);
         id=view.findViewById(R.id.students_details_id);
         phone=view.findViewById(R.id.students_details_phone);
@@ -56,7 +57,7 @@ public class StudentDetailsFragment extends Fragment {
 
 
         if(s== null) {
-            Model.getInstance().getStudentByID(studentID,(student)->{
+            Model.getInstance().getStudentByID(studentID,(s)->{
                 updateDisplay(s);
             });
         }

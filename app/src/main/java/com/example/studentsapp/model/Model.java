@@ -44,9 +44,16 @@ public class Model {
 
     }
 
-    public void deleteStudent(Student student){
-        AppLocalDB.db.studentDao().delete(student);
-        //dataB.remove(student);
+    public interface deleteStudentListener{
+        void onComplete();
+    }
+    public void deleteStudent(Student student, deleteStudentListener listener){
+        MyApplication.executorService.execute(()->{
+            AppLocalDB.db.studentDao().delete(student);
+            MyApplication.mainHandler.post(()->{
+                listener.onComplete();
+            });
+        });
     }
     public interface getStudentByIDListener{
         void onComplete(Student s);
@@ -57,6 +64,22 @@ public class Model {
             Student s = AppLocalDB.db.studentDao().getStudentByID(id);
             MyApplication.mainHandler.post(()->{
                 listener.onComplete(s);
+            });
+        });
+    }
+    public interface editStudentListener{
+        void onComplete();
+    }
+
+    public void editStudent(Student s, editStudentListener listener){
+        MyApplication.executorService.execute(()->{
+//            s.setStudentName((newS.getStudentName()));
+//            s.setStudentPhone(newS.getStudentPhone());
+//            s.setStudentAddress(newS.getStudentAddress());
+//            s.setStudentCB(newS.getStudentCB());
+            AppLocalDB.db.studentDao().editStudent(s);
+            MyApplication.mainHandler.post(()->{
+                listener.onComplete();
             });
         });
     }

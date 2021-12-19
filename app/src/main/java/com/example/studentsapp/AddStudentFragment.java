@@ -20,25 +20,38 @@ import java.util.List;
 
 public class AddStudentFragment extends Fragment {
     List<Student> SData = new LinkedList<Student>();
-
-    public AddStudentFragment() {
-    }
+    TextView name;
+    TextView id;
+    TextView phone;
+    TextView address;
+    CheckBox cb;
+    //Student s = new Student();
+    ProgressBar pb;
+    Button cancelBt;
+    Button saveBt;
+    View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_student, container, false);
+        view = inflater.inflate(R.layout.fragment_add_student, container, false);
+        name = view.findViewById(R.id.new_students_name);
+        id = view.findViewById(R.id.new_students_id);
+        phone = view.findViewById(R.id.new_students_phone);
+        address = view.findViewById(R.id.new_students_address);
+        cb = view.findViewById(R.id.new_students_cb);
+        pb = view.findViewById(R.id.add_student_progressBar);
 
-        Model.getInstance().getStudentList(new Model.GetAllStudentsListener() {
-            @Override
-            public void onComplete(List<Student> d) {
-                SData = d;
-                //adapter.notifyDataSetChanged();
-            }
-        });
+//        Model.getInstance().getStudentList(new Model.GetAllStudentsListener() {
+//            @Override
+//            public void onComplete(List<Student> d) {
+//                SData = d;
+//            }
+//        });
+        //Student s = new Student(name.getText().toString(), id.getText().toString(), phone.getText().toString(), address.getText().toString(), cb.isChecked());
 
-        Button cancelBt = view.findViewById(R.id.new_students_cancel);
+        cancelBt = view.findViewById(R.id.new_students_cancel);
         cancelBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,32 +59,24 @@ public class AddStudentFragment extends Fragment {
             }
         });
 
-        Button saveBt = view.findViewById(R.id.new_students_save);
+        saveBt = view.findViewById(R.id.new_students_save);
         saveBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView name = view.findViewById(R.id.new_students_name);
-                TextView id = view.findViewById(R.id.new_students_id);
-                TextView phone = view.findViewById(R.id.new_students_phone);
-                TextView address = view.findViewById(R.id.new_students_address);
-                CheckBox cb = view.findViewById(R.id.new_students_cb);
-                Student s = new Student(name.getText().toString(), id.getText().toString(), phone.getText().toString(), address.getText().toString(), cb.isChecked());
-                ProgressBar pb = view.findViewById(R.id.add_student_progressBar);
-                //pb.setVisibility(View.VISIBLE);
-                try{
-                    Thread.sleep(3000);
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-                cancelBt.setEnabled(false);
-                saveBt.setEnabled(false);
-                pb.setVisibility(View.GONE);
-                Model.getInstance().addNewStudent(s,()->{
-                    Navigation.findNavController(v).navigateUp();
-                });
+                save();
             }
         });
 
         return view;
     }
+    private void save() {
+        pb.setVisibility(View.VISIBLE);
+        saveBt.setEnabled(false);
+        cancelBt.setEnabled(false);
+        Student s = new Student(name.getText().toString(), id.getText().toString(), phone.getText().toString(), address.getText().toString(), cb.isChecked());
+        Model.getInstance().addNewStudent(s,()->{
+            Navigation.findNavController(view).navigateUp();
+        });
+    }
+
 }
