@@ -25,7 +25,7 @@ import java.util.List;
 
 
 public class EditStudentFragment extends Fragment {
-    Student stu = null; //new Student();
+    Student stu = null;
     TextView name;
     TextView id;
     TextView phone;
@@ -52,16 +52,9 @@ public class EditStudentFragment extends Fragment {
         pb.setVisibility(View.VISIBLE);
 
         String studentID = EditStudentFragmentArgs.fromBundle(getArguments()).getStudentID();
-        Model.getInstance().getStudentByID(studentID, (stu)->{
-            setData(stu);
-            Log.d("Tag",stu.getStudentID());
-//            stu2.setStudentID(stu.getStudentID());
-//            stu2.setStudentName(stu.getStudentName());
-//            stu2.setStudentPhone(stu.getStudentPhone());
-//            stu2.setStudentAddress(stu.getStudentAddress());
-//            stu2.setStudentCB(stu.getStudentCB());
+        Model.getInstance().getStudentByID(studentID, (stu1)->{
+            setData(stu1);
         });
-//        Log.d("Tag",stu.getStudentID());
         cancelBt = view.findViewById(R.id.edit_students_cancel);
         cancelBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +67,7 @@ public class EditStudentFragment extends Fragment {
         deleteBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.d("Tag",stu2.getStudentID());
+                pb.setVisibility(View.GONE);
                 Model.getInstance().deleteStudent(stu, new Model.deleteStudentListener() {
                     @Override
                     public void onComplete() {
@@ -88,42 +81,34 @@ public class EditStudentFragment extends Fragment {
         saveBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                save();
-//                Student s= new Student();
-//                s.setStudentName(name.getText().toString());
-//                s.setStudentID(id.getText().toString());
-//                s.setStudentPhone(phone.getText().toString());
-//                s.setStudentAddress(address.getText().toString());
-//                s.setStudentCB(cb.isChecked());
-//                Model.getInstance().editStudent(stu, s, ()->{
-//                    Navigation.findNavController(view).navigateUp();
-//                });
+                pb.setVisibility(View.VISIBLE);
+                saveBt.setEnabled(false);
+                cancelBt.setEnabled(false);
+                deleteBt.setEnabled(false);
+                Student s= new Student();
+                s.setStudentName(name.getText().toString());
+                s.setStudentID(id.getText().toString());
+                s.setStudentPhone(phone.getText().toString());
+                s.setStudentAddress(address.getText().toString());
+                s.setStudentCB(cb.isChecked());
+                Model.getInstance().editStudent(s, ()->{
+                    Navigation.findNavController(view).navigateUp();
+                });
             }
         });
         return view;
     }
-    private void save() {
-        pb.setVisibility(View.VISIBLE);
-        saveBt.setEnabled(false);
-        cancelBt.setEnabled(false);
-        deleteBt.setEnabled(false);
-        Student s= new Student();
-        s.setStudentName(name.getText().toString());
-        s.setStudentID(id.getText().toString());
-        s.setStudentPhone(phone.getText().toString());
-        s.setStudentAddress(address.getText().toString());
-        s.setStudentCB(cb.isChecked());
-        Model.getInstance().editStudent(s, ()->{
-            Navigation.findNavController(view).navigateUp();
-        });
-    }
+
     private void setData(Student s) {
-        name.setText(s.getStudentName());
-        id.setText(s.getStudentID());
-        phone.setText(s.getStudentPhone());
-        address.setText(s.getStudentAddress());
-        cb.setChecked(s.getStudentCB());
-        pb.setVisibility(View.GONE);
+        stu = s;
+        if(stu != null) {
+            name.setText(s.getStudentName());
+            id.setText(s.getStudentID());
+            phone.setText(s.getStudentPhone());
+            address.setText(s.getStudentAddress());
+            cb.setChecked(s.getStudentCB());
+            pb.setVisibility(View.GONE);
+        }
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.studentsapp.model;
 
 
+import android.util.Log;
+
 import com.example.studentsapp.MyApplication;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +34,7 @@ public class Model {
     public void addNewStudent(Student student, addNewStudentListener listener){
         MyApplication.executorService.execute(()->{
             try{
-                Thread.sleep(3000);
+                Thread.sleep(1000);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }

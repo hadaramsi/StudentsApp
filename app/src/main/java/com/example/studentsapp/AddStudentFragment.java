@@ -43,14 +43,6 @@ public class AddStudentFragment extends Fragment {
         cb = view.findViewById(R.id.new_students_cb);
         pb = view.findViewById(R.id.add_student_progressBar);
 
-//        Model.getInstance().getStudentList(new Model.GetAllStudentsListener() {
-//            @Override
-//            public void onComplete(List<Student> d) {
-//                SData = d;
-//            }
-//        });
-        //Student s = new Student(name.getText().toString(), id.getText().toString(), phone.getText().toString(), address.getText().toString(), cb.isChecked());
-
         cancelBt = view.findViewById(R.id.new_students_cancel);
         cancelBt.setOnClickListener(new View.OnClickListener() {
             @Override

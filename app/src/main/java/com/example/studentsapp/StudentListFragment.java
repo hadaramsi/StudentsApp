@@ -29,8 +29,6 @@ public class StudentListFragment extends Fragment {
     List<Student> data = new LinkedList<Student>();
     View v;
     MyAdapter adapter;
-    ProgressBar pb;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,13 +48,6 @@ public class StudentListFragment extends Fragment {
         list.setLayoutManager(layoutManager);
         adapter = new MyAdapter();
         list.setAdapter(adapter);
-//        try{
-//            Thread.sleep(3000);
-//            pb.setVisibility(View.GONE);
-//        }catch (InterruptedException e){
-//            e.printStackTrace();
-//        }
-        //pb.setVisibility(View.GONE);
 
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -71,6 +62,9 @@ public class StudentListFragment extends Fragment {
             public void OnCbClick(int position) {
                 Student student = data.get(position);
                 student.setStudentCB(!student.getStudentCB());
+                Model.getInstance().editStudent(student, ()->{
+                    adapter.notifyDataSetChanged();
+                });
             }
         });
 
@@ -124,7 +118,6 @@ public class StudentListFragment extends Fragment {
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     cbListener.OnCbClick(pos);
-                    //Log.d("TAG","cb was clicked " + pos);
                 }
             });
         }

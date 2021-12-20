@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import java.util.List;
 
 public class StudentDetailsFragment extends Fragment {
 
-    List<Student> Sdata = new LinkedList<Student>();
     TextView name;
     TextView id;
     TextView phone;
@@ -31,50 +29,29 @@ public class StudentDetailsFragment extends Fragment {
     Student s = null;
     View view;
     ProgressBar pb;
+    String studentID = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_student_details, container, false);
-        Model.getInstance().getStudentList(new Model.GetAllStudentsListener() {
-            @Override
-            public void onComplete(List<Student> d) {
-                Sdata = d;
-                //adapter.notifyDataSetChanged();
-            }
-        });
+
 
         name=view.findViewById(R.id.students_details_name);
         id=view.findViewById(R.id.students_details_id);
         phone=view.findViewById(R.id.students_details_phone);
         address=view.findViewById(R.id.students_details_address);
-        cb=view.findViewById(R.id.students_details_cb);
+        cb = view.findViewById(R.id.students_details_cb1);
         pb = view.findViewById(R.id.student_details_progressBar);
         pb.setVisibility(View.VISIBLE);
 
-        String studentID = StudentDetailsFragmentArgs.fromBundle(getArguments()).getStudentID();
+        if(studentID== null)
+            studentID = StudentDetailsFragmentArgs.fromBundle(getArguments()).getStudentID();
 
-
-        if(s== null) {
-            Model.getInstance().getStudentByID(studentID,(s)->{
-                updateDisplay(s);
-            });
-        }
-        if(s !=null) {
+        Model.getInstance().getStudentByID(studentID,(s)->{
             updateDisplay(s);
-//            name.setText("Name: " + s.getStudentName());
-//            id.setText("ID: " + s.getStudentID());
-//            phone.setText("Phone: " + s.getStudentPhone());
-//            address.setText("Address: " + s.getStudentAddress());
-//            boolean flag = s.getStudentCB();
-//            pb.setVisibility(View.GONE);
-//            Log.d("TAG","cb val: " + flag);
-//            cb.setChecked(flag);
-//            if (cb.isChecked() != flag){
-//                Log.d("TAG","value not match");
-//            }
-        }
+        });
 
         Button editBt = view.findViewById(R.id.students_details_edit);
         editBt.setOnClickListener(new View.OnClickListener() {
@@ -83,9 +60,7 @@ public class StudentDetailsFragment extends Fragment {
                 StudentDetailsFragmentDirections.ActionStudentDetailsFragmentToEditStudentFragment action = StudentDetailsFragmentDirections.actionStudentDetailsFragmentToEditStudentFragment(s.getStudentID());
                 Navigation.findNavController(v).navigate(action);
             }
-        }
-        );
-//        Log.d("TAG", "test - cb: " +  cb.isChecked());
+        });
         return view;
     }
     private void updateDisplay(Student s){
@@ -94,7 +69,7 @@ public class StudentDetailsFragment extends Fragment {
         id.setText("ID: " + s.getStudentID());
         phone.setText("Phone: " + s.getStudentPhone());
         address.setText("Address: " + s.getStudentAddress());
-        boolean flag = s.getStudentCB();
+        cb.setChecked(s.getStudentCB());
         pb.setVisibility(View.GONE);
     }
 }
